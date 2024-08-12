@@ -1,0 +1,45 @@
+import requests
+from bs4 import BeautifulSoup
+import re
+import csv
+
+def validate_phishing(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        html = response.text
+        links = html_parser(html) 
+        isPhising = check_links(links)
+        return isPhising
+    except requests.exceptions.RequestException as e:
+        print('Error fetching the HTML:', e)
+
+def html_parser(html_content):
+    http_pattern = r'https?://[^/]+'
+    http_links = re.findall(http_pattern, html_content)
+
+    links = set()
+    for link in http_links:
+        if not re.search(r'\.(png|jpg|jpeg|gif|bmp)$', link, re.IGNORECASE):
+            links.add(link)
+    return links
+        
+def check_links(links):
+    with open('/usr/data/verify_list.csv', 'r', encoding='utf-8') as csvfile:   #   file path 수정 필요
+        reader = csv.reader(csvfile)
+        
+        csv_links = set()
+        
+        for row in reader:
+            for item in row:
+                csv_links.add(item.strip()) 
+
+    phishing_links = links.intersection(csv_links)
+
+    if len(phishing_links) > 0:
+        return True
+
+    return False
+
+
+
