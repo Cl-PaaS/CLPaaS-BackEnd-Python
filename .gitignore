@@ -26,4 +26,4 @@ var/
 venv/
 
 .vscode/
-.csv
+# verify_list.*

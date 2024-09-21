@@ -2,6 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import csv
+import json
+import xml.etree.ElementTree as ET
+
 
 def validate_phishing(url):
     try:
@@ -25,18 +28,37 @@ def html_parser(html_content):
     return links
         
 def check_links(links):
-    with open('/usr/data/verify_list.csv', 'r', encoding='utf-8') as csvfile:   #   file path 수정 필요
-        reader = csv.reader(csvfile)
-        
+    # csv file
+    with open('/app/verify_list.csv', 'r', encoding='utf-8') as csvfile:   #   file path 수정 필요
+        csv_data = csv.reader(csvfile)
         csv_links = set()
         
-        for row in reader:
+        for row in csv_data:
             for item in row:
                 csv_links.add(item.strip()) 
 
-    phishing_links = links.intersection(csv_links)
+    if len(links.intersection(csv_links)) > 0:
+        return True
 
-    if len(phishing_links) > 0:
+    # json file
+    with open('/app/verify_list.json', 'r', encoding='utf-8') as jsonfile:
+        json_data = json.load(jsonfile)
+        json_links = set()
+        
+        for item in json_data:
+            json_links.add(item['url'].strip())
+
+    if len(links.intersection(json_links)) > 0:
+        return True
+
+    # xml file
+    tree = ET.parse('/app/verify_list.xml')
+    root = tree.getroot()
+    xml_links = set()
+    for link in root.findall('.//url'):
+        xml_links.add(link.text.strip())    
+
+    if len(links.intersection(json_links)) > 0:
         return True
 
     return False
