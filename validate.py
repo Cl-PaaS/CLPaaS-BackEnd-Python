@@ -29,7 +29,7 @@ def html_parser(html_content):
         
 def check_links(links):
     # csv file
-    with open('/app/verify_list.csv', 'r', encoding='utf-8') as csvfile:   #   file path 수정 필요
+    with open('/data/verify_list.csv', 'r', encoding='utf-8') as csvfile:   #   file path 수정 필요
         csv_data = csv.reader(csvfile)
         csv_links = set()
         
@@ -41,7 +41,7 @@ def check_links(links):
         return True
 
     # json file
-    with open('/app/verify_list.json', 'r', encoding='utf-8') as jsonfile:
+    with open('/data/verify_list.json', 'r', encoding='utf-8') as jsonfile:
         json_data = json.load(jsonfile)
         json_links = set()
         
@@ -52,7 +52,7 @@ def check_links(links):
         return True
 
     # xml file
-    tree = ET.parse('/app/verify_list.xml')
+    tree = ET.parse('/data/verify_list.xml')
     root = tree.getroot()
     xml_links = set()
     for link in root.findall('.//url'):

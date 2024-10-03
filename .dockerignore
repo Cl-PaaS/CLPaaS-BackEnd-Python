@@ -35,5 +35,5 @@ var/
 venv/
 
 .vscode/
-.md
+README.md
 # verify_list.*
