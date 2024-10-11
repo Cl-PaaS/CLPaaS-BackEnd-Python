@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-ENTRYPOINT ["gunicorn", "--log-level", "info", "-b", "0.0.0.0:5000", "app:app"]
+ENTRYPOINT ["gunicorn", "--log-level", "info", "-b", "0.0.0.0:5000", "-w", "1", "app:app"]

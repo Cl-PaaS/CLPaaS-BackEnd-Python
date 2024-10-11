@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 import logging
 from validate import validate_phishing
+from apscheduler.schedulers.background import BackgroundScheduler
+from get_verify_list import get_verify_list
+import datetime
 
 app = Flask(__name__)
 
@@ -19,6 +22,15 @@ def check_url():
     is_phishing = validate_phishing(url_param)
     app.logger.info('Validation Done; {}'.format(is_phishing))
     return jsonify({"URL": url_param, "isPhishing": is_phishing})
+
+def scheduled_task():
+    app.logger.info('작업이 실행되었습니다')
+    status_code_str = get_verify_list()
+    app.logger.info('status_codes: {}'.format(status_code_str))
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(scheduled_task, 'interval', days=1)
+scheduler.start()
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
