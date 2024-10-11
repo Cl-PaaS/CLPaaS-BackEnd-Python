@@ -5,6 +5,10 @@ import csv
 import json
 import xml.etree.ElementTree as ET
 
+def url_parser(content):
+    urls = re.findall(r'https?://[^\s]+', content)
+    return urls
+
 def validate_phishing(url):
     try:
         response = requests.get(url)
@@ -16,9 +20,9 @@ def validate_phishing(url):
     except requests.exceptions.RequestException as e:
         print('Error fetching the HTML:', e)
 
-def html_parser(html_content):
+def html_parser(content):
     http_pattern = r'https?://[^/]+'
-    http_links = re.findall(http_pattern, html_content)
+    http_links = re.findall(http_pattern, content)
 
     links = set()
     for link in http_links:
