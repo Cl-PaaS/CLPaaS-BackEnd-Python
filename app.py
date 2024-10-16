@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 logging.basicConfig(level=logging.INFO)
 
-@app.route('/check-url', methods=['POST'])
+@app.route('/', methods=['POST'])
 def check_url():
     app.logger.info('URL Checking Start')
     data = request.get_json()
